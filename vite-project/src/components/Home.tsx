@@ -1,15 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddEmployee from "./AddEmployee";
-import { dummyEmployeeList, IEmployee, PageEnum } from "./Employee.type";
+import EditEmployee from "./EditEmployee";
+import { IEmployee, PageEnum } from "./Employee.type";
 import EmployeeList from "./EmployeeList";
 import "./Home.style.css";
 
 const Home = () => {
-  const [employeeList, setEmployeeList] = useState(
-    dummyEmployeeList as IEmployee[]
-  );
+  const [employeeList, setEmployeeList] = useState([] as IEmployee[]);
 
   const [shownPage, setShownPage] = useState(PageEnum.list);
+  const [dataToEdit, setDataToEdit] = useState({} as IEmployee);
+
+  useEffect(() => {
+    const listInString = window.localStorage.getItem("EmployeeList");
+    if (listInString) {
+      _setEmployeeList(JSON.parse(listInString));
+    }
+  }, []);
 
   const onAddEmployeeClickHnd = () => {
     setShownPage(PageEnum.add);
@@ -19,8 +26,13 @@ const Home = () => {
     setShownPage(PageEnum.list);
   };
 
+  const _setEmployeeList = (list: IEmployee[]) => {
+    setEmployeeList(list);
+    window.localStorage.setItem("EmployeeList", JSON.stringify(list));
+  };
+
   const addEmployee = (data: IEmployee) => {
-    setEmployeeList([...employeeList, data]);
+    _setEmployeeList([...employeeList, data]);
   };
 
   const deleteEmployee = (data: IEmployee) => {
@@ -28,7 +40,19 @@ const Home = () => {
     const tempList = [...employeeList];
 
     tempList.splice(indexToDelete, 1);
-    setEmployeeList(tempList);
+    _setEmployeeList(tempList);
+  };
+
+  const EditEmployeeData = (data: IEmployee) => {
+    setShownPage(PageEnum.edit);
+    setDataToEdit(data);
+  };
+  const updateData = (data: IEmployee) => {
+    const filteredData = employeeList.filter((x) => x.id === data.id)[0];
+    const indexOfRecord = employeeList.indexOf(filteredData);
+    const tempData = [...employeeList];
+    tempData[indexOfRecord] = data;
+    _setEmployeeList(tempData);
   };
 
   return (
@@ -51,6 +75,7 @@ const Home = () => {
             <EmployeeList
               list={employeeList}
               onDeleteClickHnd={deleteEmployee}
+              onEdit={EditEmployeeData}
             />
           </>
         )}
@@ -59,6 +84,13 @@ const Home = () => {
           <AddEmployee
             onBackBtnClickHnd={showListPage}
             onSubmitClickHnd={addEmployee}
+          />
+        )}
+        {shownPage === PageEnum.edit && (
+          <EditEmployee
+            data={dataToEdit}
+            onBackBtnClickHnd={showListPage}
+            onUpdateClickHnd={updateData}
           />
         )}
       </section>

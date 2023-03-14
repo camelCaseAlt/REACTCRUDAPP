@@ -11,6 +11,7 @@ const AddEmployee = (props: Props) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+
   const { onBackBtnClickHnd, onSubmitClickHnd } = props;
 
   const onFirstNameChangeHnd = (e: any) => {
@@ -22,6 +23,7 @@ const AddEmployee = (props: Props) => {
   const onEmailChangeHnd = (e: any) => {
     setEmail(e.target.value);
   };
+
   const onSubmitBtnClickHnd = (e: any) => {
     e.preventDefault();
     if (firstName === "" || lastName === "") return;
