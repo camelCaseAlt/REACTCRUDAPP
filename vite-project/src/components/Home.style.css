@@ -8,3 +8,8 @@
 .section-content {
   margin: 15px 10% 10%;
 }
+
+.add-employee-btn {
+  float: right;
+  margin-bottom: 5px;
+}

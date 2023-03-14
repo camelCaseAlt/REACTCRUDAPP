@@ -1,15 +1,20 @@
 import { IEmployee } from "./Employee.type";
-import "./EmployeeList.style.scss";
+import "./EmployeeList.style.css";
+import EmployeeModal from "./EmployeeModal";
 
 type Props = {
   list: IEmployee[];
+  onDeleteClickHnd: (data: IEmployee) => void;
 };
 
 const EmployeeList = (props: Props) => {
-  const { list } = props;
+  const { list, onDeleteClickHnd } = props;
 
   return (
     <div>
+      <article>
+        <h3 className="list-header">Employee List</h3>
+      </article>
       <table>
         <tr>
           <th>Name</th>
@@ -25,13 +30,18 @@ const EmployeeList = (props: Props) => {
                 <div>
                   <input type="button" value="View" />
                   <input type="button" value="Edit" />
-                  <input type="button" value="Delete" />
+                  <input
+                    type="button"
+                    value="Delete"
+                    onClick={() => onDeleteClickHnd(employee)}
+                  />
                 </div>
               </td>
             </tr>
           );
         })}
       </table>
+      <EmployeeModal />
     </div>
   );
 };

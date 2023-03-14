@@ -2,7 +2,7 @@ import { useState } from "react";
 import AddEmployee from "./AddEmployee";
 import { dummyEmployeeList, IEmployee, PageEnum } from "./Employee.type";
 import EmployeeList from "./EmployeeList";
-import "./Home.style.scss";
+import "./Home.style.css";
 
 const Home = () => {
   const [employeeList, setEmployeeList] = useState(
@@ -23,6 +23,14 @@ const Home = () => {
     setEmployeeList([...employeeList, data]);
   };
 
+  const deleteEmployee = (data: IEmployee) => {
+    const indexToDelete = employeeList.indexOf(data);
+    const tempList = [...employeeList];
+
+    tempList.splice(indexToDelete, 1);
+    setEmployeeList(tempList);
+  };
+
   return (
     <>
       <article className="article-header">
@@ -38,8 +46,12 @@ const Home = () => {
               type="button"
               value="Add Employee"
               onClick={onAddEmployeeClickHnd}
+              className="add-employee-btn"
             />
-            <EmployeeList list={employeeList} />
+            <EmployeeList
+              list={employeeList}
+              onDeleteClickHnd={deleteEmployee}
+            />
           </>
         )}
 
